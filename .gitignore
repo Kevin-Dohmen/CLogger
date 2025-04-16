@@ -1,0 +1,23 @@
+.vscode/
+
+# Ignore build directories
+/build/
+/out/
+/bin/
+/lib/
+
+# Ignore CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Ignore user-specific files
+*.user
+*.swp
+*.swo
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.bak
