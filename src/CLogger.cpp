@@ -1,19 +1,51 @@
 #include "CLogger/CLogger.hpp"
 
-namespace CLogger{
+namespace CLogger {
 
-void CLoggerInstance::LogMessage(const std::string& msg, const CLogger::CLogConfig& conf);
+std::ostream* CLoggerInstance::getOutputStream(CLogSeverity sev) const {
+    return (sev >= CLogSeverity::WARNING) ? config.OutputError : config.Output;
+}
 
-CLoggerInstance(CLogConfig conf = CLogConfig());
+void CLoggerInstance::writeLogMessage(const std::string& msg, CLogSeverity sev) const {
+    std::ostream* out = getOutputStream(sev);
 
-void Log(const std::string& msg);
-void Log(const std::string& msg, CLogSeverity sev);
+    if (config.ShowSeverity) {
+        (*out) << SeverityUtils::ToString(sev) << " ";
+    }
+
+    (*out) << ": " << msg << '\n';
+}
+
+
+void CLoggerInstance::log(const std::string& msg) {
+    log(msg, CLogSeverity::LOG);
+}
+void CLoggerInstance::log(const std::string& msg, CLogSeverity sev) {
+    writeLogMessage(msg, sev);
+}
 
 // static interface
-static void Log(const std::string& msg);
-static void Log(const std::string& msg, CLogSeverity sev);
-
-static void SetDefault(CLoggerInstance* logger);
-static CLoggerInstance& GetDefault();
-
+void CLoggerInstance::Log(const std::string& msg) {
+    if (!defaultLogger) {
+        throw std::runtime_error("Default logger is not set.");
+    }
+    defaultLogger->log(msg);
 }
+void CLoggerInstance::Log(const std::string& msg, CLogSeverity sev) {
+    if (!defaultLogger) {
+        throw std::runtime_error("Default logger is not set.");
+    }
+    defaultLogger->log(msg, sev);
+}
+
+void CLoggerInstance::SetDefault(CLoggerInstance* logger) {
+    defaultLogger = logger;
+}
+CLoggerInstance& CLoggerInstance::GetDefault() {
+    if (!defaultLogger) {
+        throw std::runtime_error("Default logger is not set.");
+    }
+    return *defaultLogger;
+}
+
+} // namespace CLogger

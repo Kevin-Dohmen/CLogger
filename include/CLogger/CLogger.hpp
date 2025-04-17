@@ -2,6 +2,7 @@
 #define CLogger_H
 
 #include <string>
+#include <ostream>
 
 #include "CLogger/CLogConfig.hpp"
 #include "CLogger/CLogSeverity.hpp"
@@ -13,12 +14,14 @@ private:
     CLogConfig config;
     static CLoggerInstance* defaultLogger;
 
-    static void LogMessage(const std::string& msg, const CLogConfig& conf);
+    std::ostream* getOutputStream(CLogSeverity sev) const;
+    void writeLogMessage(const std::string& msg, CLogSeverity sev) const;
 public:
-    CLoggerInstance(CLogConfig conf = CLogConfig());
+    CLoggerInstance(CLogConfig conf = CLogConfig())
+        : config(std::move(config)) {}
 
-    void Log(const std::string& msg);
-    void Log(const std::string& msg, CLogSeverity sev);
+    void log(const std::string& msg);
+    void log(const std::string& msg, CLogSeverity sev);
 
     // static interface
     static void Log(const std::string& msg);

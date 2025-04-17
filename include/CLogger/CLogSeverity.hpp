@@ -6,9 +6,9 @@
 namespace CLogger {
 
 enum class CLogSeverity {
+    DEBUG,
     LOG,
     INFO,
-    DEBUG,
     WARNING,
     ERROR,
     FATAL,
