@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add the library
 add_library(CLogger
     src/CLogger.cpp
-    src/CLoggerInstance.cpp
 )
 
 # # Add an executable for testing

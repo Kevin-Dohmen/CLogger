@@ -1,25 +1,31 @@
 #pragma once
-
-#include "CLogger/CLoggerInstance.hpp"
-#include "CLogger/CLogSeverity.hpp"
+#define CLogger_H
 
 #include <string>
-#include <iostream>
+
+#include "CLogger/CLogConfig.hpp"
+#include "CLogger/CLogSeverity.hpp"
 
 namespace CLogger {
 
-    // -=-=-=-=-=- Types -=-=-=-=-=-
+class CLoggerInstance {
+private:
+    CLogConfig config;
+    static CLoggerInstance* defaultLogger;
 
-    struct CLConfig;
-    class CLoggerInstance;
-    enum CLogSeverity;
+    static void LogMessage(const std::string& msg, const CLogConfig& conf);
+public:
+    CLoggerInstance(CLogConfig conf = CLogConfig());
 
-    // -=-=-=-=-=- Functies -=-=-=-=-=-
+    void Log(const std::string& msg);
+    void Log(const std::string& msg, CLogSeverity sev);
 
-    CLConfig defaultConfig(0, false, false);
-    CLoggerInstance defaultLogger = CLoggerInstance::getDefaultLogger();
+    // static interface
+    static void Log(const std::string& msg);
+    static void Log(const std::string& msg, CLogSeverity sev);
 
-    static inline void log(std::string& msg){
-        defaultLogger.log(msg);
-    }
-}
+    static void SetDefault(CLoggerInstance* logger);
+    static CLoggerInstance& GetDefault();
+};
+
+} // namespace CLogger

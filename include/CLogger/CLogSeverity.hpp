@@ -1,7 +1,7 @@
 #pragma once
 
-#include <array>
 #include <string>
+#include <array>
 
 namespace CLogger {
 
@@ -12,20 +12,25 @@ enum class CLogSeverity {
     WARNING,
     ERROR,
     FATAL,
-    COUNT // To represent the number of severity levels
+    COUNT
 };
 
-constexpr std::array<const char*, static_cast<size_t>(CLogSeverity::COUNT)> _SeverityLookup{
-    "[LOG]",
-    "[INFO]",
-    "[DEBUG]",
-    "[WARNING]",
-    "[ERROR]",
-    "[FATAL]"
-};
+namespace SeverityUtils {
+    constexpr std::array<std::string_view, static_cast<size_t>(CLogSeverity::COUNT)> SeverityToString{
+        "[LOG]",
+        "[INFO]",
+        "[DEBUG]",
+        "[WARNING]",
+        "[ERROR]",
+        "[FATAL]"
+    };
+        
+    constexpr std::string_view ToString(CLogSeverity sev) {
+        return SeverityToString[static_cast<size_t>(sev)];
+    }
 
-constexpr const char* CLogSeverityToString(CLogSeverity sev) {
-    return _SeverityLookup[static_cast<size_t>(sev)];
+    static_assert(SeverityToString.size() == static_cast<size_t>(CLogSeverity::COUNT),
+        "SeverityToString array size must match the number of CLogSeverity enum values.");
 }
 
 } // namespace CLogger
