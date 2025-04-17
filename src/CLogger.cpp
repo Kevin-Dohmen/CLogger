@@ -7,6 +7,10 @@ std::ostream* CLoggerInstance::getOutputStream(CLogSeverity sev) const {
 }
 
 void CLoggerInstance::writeLogMessage(const std::string& msg, CLogSeverity sev) const {
+    if (sev < config.Verbosity) {
+        return;
+    }
+
     std::ostream* out = getOutputStream(sev);
 
     if (config.ShowSeverity) {
